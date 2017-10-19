@@ -15,7 +15,8 @@ class ScoreForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const { user, score } = this.state;
-    this.props.dispatch(addScore(user, score))
+    const time = new Date();
+    this.props.dispatch(addScore(user, Number(score), time))
   }
 
   render() {
