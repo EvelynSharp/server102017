@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button } from 'semantic-ui-react';
+import { Form, Button } from 'semantic-ui-react';
 import { addScore } from '../actions/scores';
 
 class ScoreForm extends React.Component {

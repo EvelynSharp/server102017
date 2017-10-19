@@ -2,52 +2,51 @@ const express = require('express');
 const router = express.Router();
 const getQuery = require('../models/db');
 
+const sortTopList = (arr, num) => {
+  return [...arr].sort((a,b) => b.score - a.score )
+                 .slice(0, num)
+}
+
 router.get('/top/:num', (req, res) => {
   const returnResult = (hasError, result={}) => {
-      if (hasError) {
-        console.log('Error')
-      } else {
-        console.log(result.rows)
-        const top = [...result.rows]
-          .sort((a,b) => new Date(a.time).getTime() - new Date(b.time).getTime())
-          .sort((a,b) => b.score - a.score )
-          .slice(0, req.params.num)
-        res.json(top)
-      }
+      if (hasError)
+          console.log('Error')
+        res.json(sortTopList(result.rows, req.params.num))
   }
-  getQuery('SELECT username, score, time FROM scores', [], returnResult)
-  //console.log(result)
+  getQuery('SELECT username, score, time FROM scores ORDER BY time ASC', [], returnResult)
 })
 
 
 router.patch('/', (req, res) => {
-  const { username, score, time } = req.body
+  const { username, score } = req.body
   const returnResult = (hasError, result={}) => {
     if(hasError) {
       console.log('Error')
     } else {
-      res.json({ username, score, time })
+      res.json(result.rows[0])
     }
+  }
+  const getNewRecord = (hasError, result={}) => {
+    if(hasError)
+      console.log('Error')
+    getQuery('SELECT username, score, time FROM scores WHERE username = ?;', [username], returnResult)
   }
   const checkUser = (hasError, result={})  => {
     const { rows } = result;
-    console.log(rows)
     if(hasError) {
       console.log('Error')
     } else {
-      // console.log(result.rows)
-      if (result.rows.length < 1) {
-        getQuery('INSERT INTO scores(username, score, time) VALUES (?, ?, ?);', [username, score, time], returnResult)
+      if (rows.length < 1) {
+        getQuery('INSERT INTO scores(username, score, time) VALUES (?, ?, NOW());', [username, score], getNewRecord)
       } else {
-        if(result.rows[0].score < score) {
-          getQuery('UPDATE scores SET score = ?, time = ? WHERE username = ?;', [score, time, username ], returnResult)
+        if(rows[0].score < score) {
+          getQuery('UPDATE scores SET score = ?, time = NOW() WHERE username = ?;', [score, username ], getNewRecord)
         } else {
-          res.json({username, score: result.rows[0].score, time: result.rows[0].time })
+          res.json(rows[0])
         }
       }
     }
   }
-
   getQuery('SELECT username, score, time FROM scores WHERE username=?;', [ username ], checkUser)
 
 })

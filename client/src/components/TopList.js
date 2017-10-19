@@ -12,7 +12,7 @@ class TopList extends React.Component {
     const { scores } = this.props;
     return !scores ? null : (
       <div>
-        {this.props.scores.map( s => {
+        {scores.map( s => {
             return (
               <div key={s.username}>
                 {`${s.username}: ${s.score} points`}
