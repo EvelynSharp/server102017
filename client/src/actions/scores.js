@@ -8,9 +8,9 @@ export const getTopScores = (num) => {
 }
 
 
-export const addScore = (username, score, time) => {
+export const addScore = (username, score) => {
   return(dispatch) => {
-    axios.patch(`api/scores`, { username, score, time })
+    axios.patch(`api/scores`, { username, score })
       .then( res => dispatch({ type: 'ADD_SCORE', newscore: res.data }) )
   }
 }

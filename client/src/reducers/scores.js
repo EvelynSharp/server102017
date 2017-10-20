@@ -1,6 +1,9 @@
 const sortScores = (arr) => {
-  return [...arr].sort((a,b) => new Date(a.time) - new Date(b.time))
-                 .sort((a,b) => b.score - a.score)
+  return [...arr].sort((a,b) => {
+    if(b.score == a.score)
+      return new Date(a.time) - new Date(b.time)
+    return b.score - a.score
+  })
 }
 
 

@@ -1,0 +1,27 @@
+SETUP AND USAGE:
+1. dbschema.sql includes command to run to set up the table in sql
+2. cd into root file in terminal and run "yarn"
+3. cd into client folder in terminal and run "yarn"
+4. in root file, run "nodemon" to start the server - should be running on port 3001
+5. in client folder, run "yarn start" to start the react app - should be running on port 3000
+6. at http://localhost:3000/, the app will open, which contains a form to submit user name and new score, and a list showing top 10 scores
+7. with a tie, the earlier score is chosen
+8. client/src/actions/scores.js contains examples of how to use the server:
+  1) `api/scores/top/${num}` with GET is used to fetch the top scores from the server, num is currently coded to be 10 when called from component. But can scale up to accept user input later on.
+  2) `api/scores` with PATCH is used to add/update new score to db, need to pass username and score along with it
+
+MORE EXPLANATION:
+1. functions for handling api calls are in routes/scores.js, which is imported into app.js for usage
+2. models/db.js includes the configs for mysql - this is the first time I used mysql (over postgres), please let me know if there are things I should improve on
+3. client folder contains the frontend app, src folder includes all the components, reducers and action creators
+
+CHALLENGE AND THOUGHT PROCESS
+A - For adding/updating new score, there are a few ways to do it.
+  1) add/update the score and then make another GET req for the new list
+  2) add/update the score and then call a reusable function that queries the top 10 scores same as in GET handler, then return the new list
+  3) add/update the score, and then query to return just that user's info
+I picked option 3) because I think in bigger projects, minimizing server calls and avoiding over serving data is one of the most important things
+
+B - updating the score and returning data with one req
+  Initially I used 3 sql queries to each verify user existence, add/update, return updated record - codes for this is commented out on the bottom of routes/scores.js
+  Then I updated the sql query to identify the existence and update accordingly for simplicity of code - which is the code currently being used.

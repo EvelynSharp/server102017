@@ -4,8 +4,8 @@ import { Form, Button } from 'semantic-ui-react';
 import { addScore } from '../actions/scores';
 
 class ScoreForm extends React.Component {
-
-  state = { user: '', score: '' }
+  defaultData = { user: '', score: '' }
+  state = { ...this.defaultData }
 
   handleChange = (e) => {
     const { id, value } = e.target;
@@ -15,14 +15,14 @@ class ScoreForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const { user, score } = this.state;
-    const time = new Date();
-    this.props.dispatch(addScore(user, Number(score), time))
+    this.props.dispatch(addScore(user, Number(score)))
+    this.setState({ ...this.defaultData })
   }
 
   render() {
     const { user, score } = this.state;
     return(
-      <Form onSubmit={this.handleSubmit} style={{ paddingTop: '5%'}}>
+      <Form onSubmit={this.handleSubmit} style={{ padding: '5%'}}>
         <Form.Group  inline>
           <Form.Input
             id='user'

@@ -1,3 +1,4 @@
+//this file has mysql config and helper method 
 const mysql = require('mysql');
 
 const pool = mysql.createPool({
@@ -11,7 +12,7 @@ const pool = mysql.createPool({
 const getQuery = function(query, values, callback){
     pool.getConnection(function(err,connection){
         if (err) {
-          callback(true);
+          callback(err);
           return;
         }
         connection.query(query, values, function(err,results){
@@ -19,10 +20,9 @@ const getQuery = function(query, values, callback){
             if(!err) {
               callback(false, {rows: results});
             }
-            // check null for results here
         });
         connection.on('error', function(err) {
-              callback(true);
+              callback(err);
               return;
         });
     });

@@ -11,7 +11,8 @@ class TopList extends React.Component {
   render() {
     const { scores } = this.props;
     return !scores ? null : (
-      <div>
+      <div style={{margin: '0 5%'}}>
+        <h2>Top Scores:</h2>
         {scores.map( s => {
             return (
               <div key={s.username}>
